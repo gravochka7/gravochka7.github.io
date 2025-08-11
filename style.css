@@ -420,7 +420,7 @@ body.menu-open {
 .cart-item-count.visible {
     transform: scale(1);
 }
-.product-card { gap: 15px; } 
+.product-card { gap: 8px; } 
 .product-card h2 {
     font-size: 1.2em;
     color: var(--primary-color);
@@ -1141,9 +1141,9 @@ body.menu-open {
 
 /* Стиль для кнопки "Обрати додаткові товари", чтобы она не была такой яркой */
 .secondary-btn {
-    background-color: #f0f2f5; /* Светлый фон */
-    color: var(--primary-color); /* Темный текст */
-    border: 2px solid #c19a6b; /* Светлая рамка */
+    background-color: #94b98b; /* Светлый фон */
+    color: white ; /* Темный текст */
+    border: 2px solid rgba(112, 160, 126, 0.692); /* Светлая рамка */
 }
 
 .secondary-btn:hover {
@@ -1255,10 +1255,9 @@ body.menu-open {
 .quick-order-button-wrapper {
     display: flex;
     justify-content: center;
-    align-items: stretch;  /* Змінено: для однакової висоти всіх кнопок */
+    align-items: center; /* <-- Тепер кнопки не будуть розтягуватися */
     gap: 15px;
 }
-
 /* Загальний стиль для кнопок Viber та Telegram (Mobile-First) */
 .social-cta-button {
     display: flex;
@@ -1444,4 +1443,50 @@ body.menu-open {
     .swipe-hint-container {
         display: none !important;
     }
+}
+
+/* --- АДАПТИВНЕ ЗМЕНШЕННЯ РОЗМІРУ ГРУПИ КНОПОК "ЗАМОВИТИ ШВИДКО" --- */
+
+/* 1. Мобільні стилі (найменші) */
+/* Центральна кнопка */
+.quick-order-button-wrapper .cta-button {
+    padding: 8px 16px;
+    font-size: 0.8em;
+}
+/* Бічні кнопки */
+.quick-order-button-wrapper .social-cta-button {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    font-size: 1.2em;
+}
+
+/* 2. Стилі для ПК (трохи більші) */
+@media (min-width: 993px) {
+    /* Центральна кнопка */
+    .quick-order-button-wrapper .cta-button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+    /* Бічні кнопки */
+    .quick-order-button-wrapper .social-cta-button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.4em;
+    }
+}
+/* --- СТИЛІ ДЛЯ ОПИСУ В КАРТЦІ ТОВАРУ --- */
+
+/* Спрощений стиль для опису */
+.product-description {
+    font-size: 0.85em;
+    color: rgb(102, 102, 119);
+    line-height: 1.5;
+    margin: 0;
+    padding: 0 5px; /* Додаємо невеликі бокові відступи, щоб текст не прилипав до країв */
+}
+
+/* Невелике коригування для заголовка, щоб він не розтягувався */
+.product-card h2 {
+    flex-grow: 0;
 }
