@@ -152,9 +152,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <button class="add-to-cart-btn"><i class="fas fa-cart-plus"></i>Замовити</button>
                     </div>
                 </div>
-                <div class="quick-order-button-wrapper">
-                    <button id="showQuickOrderFormBtn" class="cta-button">Замовити швидко</button>
-                </div>
+      <div class="quick-order-button-wrapper">
+    <a href="viber://chat?number=+380687805277" target="_blank" class="social-cta-button viber-btn" aria-label="Написати у Viber">
+        <i class="fab fa-viber"></i>
+    </a>
+
+    <button id="showQuickOrderFormBtn" class="cta-button">Замовити швидко</button>
+
+    <a href="https://t.me/gravik_memories" target="_blank" class="social-cta-button telegram-btn" aria-label="Написати у Telegram">
+        <i class="fab fa-telegram-plane"></i>
+    </a>
+</div>
+<p class="quick-order-subtext">При замовленні у "Мессенджер" Напишіть менеджеру який саме жетон вам потрібно</p>
             </div>
         </section>
 
@@ -442,27 +451,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </main>
 
     <footer class="footer" id="my-section">
-        <div class="container">
-            <h3>Контакти та інформація</h3>
-            <div class="footer-contacts">
-                <p><i class="fas fa-envelope"></i> Email: brelok2023@gmail.com</p>
-                <p><i class="fas fa-phone"></i> Телефон: +380 (68) 780-52-77 </p>
-                <p><i class="fas fa-clock"></i> Працюємо: Пн-Сб 9:00-20:00</p>
-                <p><i class="fas fa-clock"></i> Замовлення Онлайн: Пн-Нд <b>Цілодобово</b></p>
-            </div>
-            <div class="social-links">
-                <a href="https://www.facebook.com/profile.php?id=61553947448459" target="_blank" aria-label="Наша сторінка в Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://www.instagram.com/gravik_ua" target="_blank" aria-label="Наш Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://t.me/gravik_memories" target="_blank" aria-label="Наш Telegram"><i class="fab fa-telegram-plane"></i></a>
-                <a href="viber://chat?number=+380687805277" target="_blank" aria-label="Наш Viber"><i class="fab fa-viber"></i></a>
-            </div>
-            <p>&copy; 2024 GravikMemories. Всі права захищені.</p>
+    <div class="container">
+        <h3>Контакти та інформація</h3>
+        <div class="footer-contacts">
+            <p><i class="fas fa-envelope"></i> Email: gravochka@gmail.com</p>
+            <p><i class="fas fa-phone"></i> Телефон: +380 (68) 780-52-77 </p>
+            <p><i class="fas fa-clock"></i> Працюємо: Пн-Сб 9:00-20:00</p>
+            <p><i class="fas fa-clock"></i> Замовлення Онлайн: Пн-Нд <b>Цілодобово</b></p>
         </div>
-    </footer>
+
+        <div class="social-links">
+            <a href="https://www.facebook.com/profile.php?id=61553947448459" target="_blank" aria-label="Наша сторінка в Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/gravik_ua" target="_blank" aria-label="Наш Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://t.me/gravik_memories" target="_blank" aria-label="Наш Telegram"><i class="fab fa-telegram-plane"></i></a>
+            <a href="viber://chat?number=+380687805277" target="_blank" aria-label="Наш Viber"><i class="fab fa-viber"></i></a>
+        </div>
+
+        <!-- Блок з посиланнями, що відкриваються в новій вкладці -->
+        <div class="footer-links">
+            <a href="payment-and-delivery.html" target="_blank">Оплата та доставка</a>
+            <a href="returns.html" target="_blank">Повернення та обмін</a>
+            <a href="terms-of-service.html" target="_blank">Умови використання</a>
+            <a href="privacy-policy.html" target="_blank">Політика конфіденційності</a>
+        </div>
+
+        <p>&copy; 2025 Gravochka. Всі права захищені.</p>
+    </div>
+</footer>
 
     <div id="imageModal" class="modal">
         <span class="close" id="closeModalButton">&times;</span>
         <img class="modal-content" id="expandedImg">
+        <!-- НОВИЙ ЕЛЕМЕНТ-ПІДКАЗКА -->
+    <div id="swipe-hint" class="swipe-hint-container hidden">
+        <img src="images2/svg1.svg" alt="Підказка свайпу" width="80">
+    </div>
         <button class="modal-nav prev" id="modalPrev">&#10094;</button>
         <button class="modal-nav next" id="modalNext">&#10095;</button>
         <div class="modal-dots" id="modalDotsContainer"></div>
@@ -476,9 +499,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="order-popup">
             <form id="quickOrderForm">
                 <button type="button" class="close-popup" id="closePopup">&times;</button>
-                <p>Введіть ваш номер, і ми скоро зателефонуємо.</p>
+                <p><b>Введіть ваш номер, і ми скоро Вам зателефонуємо.</b></p>
                 <input type="tel" id="clientPhone" placeholder="+380 XX XXX XX XX" required>
-                <button type="submit">Чекаю на дзвінок</button>
+                <button type="submit">Очікую на дзвінок</button>
             </form>
         </div>
     </div>
