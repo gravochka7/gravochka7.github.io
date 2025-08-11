@@ -28,10 +28,17 @@ img { max-width: 100%; height: auto; }
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 10px rgba(44, 62, 80, 0.2);
-    padding: 15px 0;
+    padding: 15px 0; /* Стандартный отступ для мобильных */
     position: sticky;
     top: 0;
     z-index: 1000;
+}
+
+@media (min-width: 993px) {
+    .innovative-solutions {
+        padding-top: 32px !important;
+        padding-bottom: 32px !important;
+    }
 }
 .header .container { display: flex; justify-content: space-between; align-items: center; }
 .logo img {
@@ -131,7 +138,7 @@ img { max-width: 100%; height: auto; }
     font-family: var(--font-heading);
     color: var(--light-text-color);
 }
-.product-card-section { background-color: #f0f2f5; text-align: center; padding: 64px 0; }
+.product-card-section { background-color: #f0f2f5; text-align: center; padding: 50px 0; }
 .product-cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; max-width: 1200px; margin: 0 auto; padding: 0 var(--container-padding); }
 .product-card { background-color: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 20px; display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease; }
 .product-card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.15); }
@@ -155,7 +162,7 @@ img { max-width: 100%; height: auto; }
 }
 #extras .extra-price { font-family: var(--font-main); font-weight: bold; font-size: 1.1em; margin-bottom: 5px; color: #006400; }
 .extra-item h3 { font-size: 1.5em; margin-bottom: 15px; }
-.extra-item p { font-size: 0.9em; color: #666; max-width: 280px; margin-bottom: 15px; }
+.extra-item p { font-size: 0.9em; color: #667; max-width: 280px; margin-bottom: 15px; }
 .extra-stock { color: var(--accent-color); font-weight: 500; font-family: var(--font-main); font-size: 1em; }
 .extra-item .cta-button { padding: 12px 25px; font-size: 1em; }
 .extra-item .extra-action { margin-top: auto; }
@@ -221,7 +228,7 @@ img { max-width: 100%; height: auto; }
 .timeline-item:not(.right) .timeline-number { right: 20px; }
 .timeline-item.right .timeline-number { left: 20px; }
 .footer { background-color: var(--primary-color); color: var(--light-text-color); padding: 30px 0; text-align: center; font-size: 0.9em; }
-.footer .container { display: flex; flex-direction: column; gap: 15px; align-items: center; }
+.footer .container { display: flex; flex-direction: column;  align-items: center; }
 .footer p { margin: 0; }
 .footer h3 { color: var(--light-text-color); margin-bottom: 15px; font-size: 1.4em; }
 .footer-contacts p { margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
@@ -1240,4 +1247,201 @@ body.menu-open {
 
   /* Применяем нашу 10-секундную бесконечную анимацию */
   animation: final-glow 10s infinite;
+}
+
+/* --- АДАПТИВНІ СТИЛІ ДЛЯ ГРУПИ КНОПОК --- */
+
+/* Робимо контейнер гнучким, щоб розмістити кнопки в ряд */
+.quick-order-button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;  /* Змінено: для однакової висоти всіх кнопок */
+    gap: 15px;
+}
+
+/* Загальний стиль для кнопок Viber та Telegram (Mobile-First) */
+.social-cta-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Адаптивність для мобільних: */
+    aspect-ratio: 1 / 1;   /* ЗАВЖДИ робить кнопку квадратною, щоб вийшло коло */
+    padding: 12px;         /* Внутрішній відступ для іконки */
+    
+    border-radius: 50%;
+    font-size: 1.5em;      /* Розмір іконки на мобільних */
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-cta-button:hover {
+    opacity: 0.85;
+}
+
+/* Колір для кнопки Viber */
+.viber-btn {
+    background-color: #7360F2;
+}
+
+/* Колір для кнопки Telegram */
+.telegram-btn {
+    background-color: #2AABEE;
+}
+
+/* СТИЛІ ТІЛЬКИ ДЛЯ ПК (екрани ширші за 992px) */
+@media (min-width: 993px) {
+    .social-cta-button {
+        /* Перевизначаємо розміри на фіксовані */
+        width: 65px;
+        height: 65px;
+        padding: 0;          /* Скидаємо padding, бо розмір фіксований */
+        font-size: 1.8em;    /* Збільшуємо іконку для ПК */
+    }
+}
+
+/* Стиль для текстового блоку під кнопками */
+.quick-order-subtext {
+    text-align: center; /* Центруємо текст */
+    color: #555;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-top: 15px; /* <-- ОСНОВНИЙ ВІДСТУП! Змінюйте це число, щоб зробити текст ближче або далі */
+
+    /* Додаткові стилі для кращого вигляду */
+    max-width: 450px; /* Обмеження ширини на великих екранах */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px; /* Відступи з боків на мобільних */
+}
+
+/* --- СТИЛІ ДЛЯ ІНФОРМАЦІЙНИХ СТОРІНОК --- */
+
+.info-page {
+    padding: 40px 0;
+    background-color: #f8f9fa; /* Світлий фон */
+}
+
+.info-page .container {
+    max-width: 800px; /* Обмежуємо ширину для кращої читабельності */
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+}
+
+.info-page h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.9em;
+}
+
+.info-page h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    font-size: 1.2em;
+    color: var(--primary-color);
+}
+
+.info-page p, .info-page li {
+    line-height: 1.7;
+    color: #333;
+    font-size: 0.85em;
+    margin-bottom: 15px;
+}
+
+.info-page ul {
+    padding-left: 25px;
+    list-style-type: disc;
+}
+
+/* Адаптивність для мобільних */
+@media (max-width: 768px) {
+    .info-page .container {
+        padding: 20px;
+    }
+    .info-page h1 {
+        font-size: 1.8em;
+    }
+    .info-page h2 {
+        font-size: 1.3em;
+    }
+}
+
+/* --- СТИЛІ ДЛЯ БЛОКУ ПОСИЛАНЬ У ФУТЕРІ (ПІД СОЦМЕРЕЖАМИ) --- */
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 20px;
+    margin-top: 10px; /* <-- УСТАНАВЛИВАЕМ НУЖНЫЙ ОТСТУП СВЕРХУ */
+    margin-bottom: 20px; /* Отступ до копирайта */
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7); /* Робимо текст менш яскравим */
+    text-decoration: none;
+    font-size: 0.85em; /* Трохи менший шрифт */
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+/* --- СТИЛІ ДЛЯ ПІДКАЗКИ СВАЙПУ В МОДАЛЬНОМУ ОКНІ --- */
+
+.swipe-hint-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2003;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%); /* Центруємо */
+}
+
+/* Клас для показу підказки та запуску анімації */
+.swipe-hint-container.visible {
+    /* Назва анімації, тривалість, плавність, кількість повторень (1 раз) */
+    animation: swipe-and-fade 2.5s ease-in-out 1;
+}
+
+/* Клас, щоб повністю сховати елемент */
+.swipe-hint-container.hidden {
+    display: none;
+}
+
+.swipe-hint-container img {
+    filter: drop-shadow(0 0 8px rgba(0,0,0,0.8)) invert(1);
+}
+/* Нова анімація РУХУ зліва направо */
+@keyframes swipe-and-fade {
+    0% {
+        transform: translate(-50%, -50%) translateX(-60px);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        transform: translate(-50%, -50%) translateX(60px);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) translateX(60px);
+        opacity: 0;
+    }
+}
+
+/* Ховаємо підказку на великих екранах (ПК) */
+@media (min-width: 993px) {
+    .swipe-hint-container {
+        display: none !important;
+    }
 }
