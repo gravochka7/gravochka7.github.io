@@ -107,117 +107,146 @@ document.addEventListener('DOMContentLoaded', () => {
         state.container.style.transform = `translateX(-${state.currentSlide * 100}%)`;
     }
     
-    // --- КОД МОДАЛЬНОГО ОКНА ДЛЯ ИЗОБРАЖЕНИЙ ---
-    const imageModal = document.getElementById("imageModal");
-    const modalImg = document.getElementById("expandedImg");
-    const closeImageModalButton = document.getElementById("closeModalButton");
-    const modalPrevBtn = document.getElementById("modalPrev");
-    const modalNextBtn = document.getElementById("modalNext");
-    const dotsContainer = document.getElementById('modalDotsContainer');
-    let currentModalImages = [];
-    let currentImageIndex = 0;
-    
-    window.openImageModal = function(isGallery, imagesOrSrc, startIndex = 0) {
-        if (!imageModal) return;
-        body.classList.add('menu-open');
-        imageModal.style.display = "block";
-        currentModalImages = Array.isArray(imagesOrSrc) ? imagesOrSrc : [imagesOrSrc];
-        currentImageIndex = startIndex;
-        const hasMultipleImages = currentModalImages.length > 1;
-        modalPrevBtn.classList.toggle('is-visible', hasMultipleImages);
-        modalNextBtn.classList.toggle('is-visible', hasMultipleImages);
-        dotsContainer.innerHTML = '';
-        if (hasMultipleImages) {
-            currentModalImages.forEach((_, index) => {
-                const dot = document.createElement('span');
-                dot.classList.add('dot');
-                dot.addEventListener('click', (e) => { e.stopPropagation(); showImage(index); });
-                dotsContainer.appendChild(dot);
+   // --- КОД МОДАЛЬНОГО ОКНА ДЛЯ ИЗОБРАЖЕНИЙ (С АНИМИРОВАННОЙ ПОДСКАЗКОЙ) ---
+const imageModal = document.getElementById("imageModal");
+const modalImg = document.getElementById("expandedImg");
+const closeImageModalButton = document.getElementById("closeModalButton");
+const modalPrevBtn = document.getElementById("modalPrev");
+const modalNextBtn = document.getElementById("modalNext");
+const dotsContainer = document.getElementById('modalDotsContainer');
+const swipeHint = document.getElementById('swipe-hint');
+let currentModalImages = [];
+let currentImageIndex = 0;
+
+window.openImageModal = function(isGallery, imagesOrSrc, startIndex = 0) {
+    if (!imageModal) return;
+    body.classList.add('menu-open');
+    imageModal.style.display = "block";
+    currentModalImages = Array.isArray(imagesOrSrc) ? imagesOrSrc : [imagesOrSrc];
+    currentImageIndex = startIndex;
+    const hasMultipleImages = currentModalImages.length > 1;
+
+    modalPrevBtn.classList.toggle('is-visible', hasMultipleImages);
+    modalNextBtn.classList.toggle('is-visible', hasMultipleImages);
+    dotsContainer.innerHTML = '';
+
+    // Логіка показу підказки (без збереження стану)
+    if (hasMultipleImages && swipeHint) {
+        // Показуємо підказку, щоб анімація спрацювала
+        swipeHint.classList.remove('hidden');
+        swipeHint.classList.add('visible');
+        // НОВИЙ РЯДОК: ховаємо підказку після завершення анімації
+    swipeHint.addEventListener('animationend', () => swipeHint.classList.add('hidden'), { once: true });
+    } else if (swipeHint) {
+        // Ховаємо, якщо одне зображення
+        swipeHint.classList.add('hidden');
+        swipeHint.classList.remove('visible');
+    }
+
+    if (hasMultipleImages) {
+        currentModalImages.forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.classList.add('dot');
+            dot.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                showImage(index);
             });
-            imageModal.addEventListener('touchstart', handleTouchStart, { passive: true });
-            imageModal.addEventListener('touchmove', handleTouchMove, { passive: true });
-            imageModal.addEventListener('touchend', handleTouchEnd);
-        }
-        showImage(currentImageIndex);
-        document.addEventListener('keydown', handleKeyDown);
-        history.pushState({ modal: 'image' }, "Image");
-    }
-
-    window.closeImageModalLogic = function() {
-        if (imageModal && imageModal.style.display === "block") {
-            body.classList.remove('menu-open');
-            imageModal.style.display = "none";
-            document.removeEventListener('keydown', handleKeyDown);
-            imageModal.removeEventListener('touchstart', handleTouchStart);
-            imageModal.removeEventListener('touchmove', handleTouchMove);
-            imageModal.removeEventListener('touchend', handleTouchEnd);
-            if (dotsContainer) dotsContainer.innerHTML = '';
-        }
-    }
-
-    if (imageModal) {
-        if (closeImageModalButton) closeImageModalButton.addEventListener('click', () => history.back());
-        imageModal.addEventListener('click', (event) => {
-            if (event.target === imageModal) history.back();
+            dotsContainer.appendChild(dot);
         });
-        if (modalPrevBtn) modalPrevBtn.addEventListener('click', (e) => { e.stopPropagation(); showImage(currentImageIndex - 1); });
-        if (modalNextBtn) modalNextBtn.addEventListener('click', (e) => { e.stopPropagation(); showImage(currentImageIndex + 1); });
+        imageModal.addEventListener('touchstart', handleTouchStart, { passive: true });
+        imageModal.addEventListener('touchmove', handleTouchMove, { passive: true });
+        imageModal.addEventListener('touchend', handleTouchEnd);
     }
+    showImage(currentImageIndex);
+    document.addEventListener('keydown', handleKeyDown);
+    history.pushState({ modal: 'image' }, "Image");
+}
 
-    function showImage(index) {
-        if (!currentModalImages || currentModalImages.length === 0) return;
-        currentImageIndex = (index + currentModalImages.length) % currentModalImages.length;
-        modalImg.src = currentModalImages[currentImageIndex];
-        const allDots = dotsContainer.querySelectorAll('.dot');
-        if (allDots.length > 0) {
-            allDots.forEach(dot => dot.classList.remove('active'));
-            allDots[currentImageIndex].classList.add('active');
+window.closeImageModalLogic = function() {
+    if (imageModal && imageModal.style.display === "block") {
+        body.classList.remove('menu-open');
+        imageModal.style.display = "none";
+        document.removeEventListener('keydown', handleKeyDown);
+        imageModal.removeEventListener('touchstart', handleTouchStart);
+        imageModal.removeEventListener('touchmove', handleTouchMove);
+        imageModal.removeEventListener('touchend', handleTouchEnd);
+        if (dotsContainer) dotsContainer.innerHTML = '';
+        // Скидаємо стан підказки при закритті
+        if (swipeHint) {
+            swipeHint.classList.remove('visible');
+            swipeHint.classList.add('hidden');
         }
     }
+}
 
-    document.querySelectorAll('.tile-gallery-item, .gallery-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const galleryContainer = item.closest('.gallery-container');
-            if (galleryContainer) {
-                const allItems = Array.from(galleryContainer.children);
-                const images = allItems.map(galleryItem => galleryItem.dataset.src || galleryItem.querySelector('img').src);
-                const startIndex = allItems.indexOf(item);
-                openImageModal(true, images, startIndex);
-            } else {
-                const src = item.dataset.src || item.querySelector('img').src;
-                openImageModal(false, src);
-            }
-        });
+if (imageModal) {
+    if (closeImageModalButton) closeImageModalButton.addEventListener('click', () => history.back());
+    imageModal.addEventListener('click', (event) => {
+        if (event.target === imageModal) history.back();
     });
-
-    document.querySelectorAll('.product-card .product-image-wrapper').forEach(wrapper => {
-        wrapper.addEventListener('click', (e) => {
-            const card = e.currentTarget.closest('.product-card');
-            const imagesAttr = card.dataset.images;
-            if (!imagesAttr) return;
-            const images = imagesAttr.split(',').map(s => s.trim());
-            if (images.length > 0) openImageModal(true, images, 0);
-        });
+    if (modalPrevBtn) modalPrevBtn.addEventListener('click', (e) => { 
+        e.stopPropagation(); 
+        showImage(currentImageIndex - 1);
     });
+    if (modalNextBtn) modalNextBtn.addEventListener('click', (e) => { 
+        e.stopPropagation(); 
+        showImage(currentImageIndex + 1);
+    });
+}
 
-    function handleKeyDown(e) {
-        if (!imageModal || imageModal.style.display !== 'block') return;
-        if (e.key === "Escape") history.back();
-        if (currentModalImages.length <= 1) return;
-        if (e.key === "ArrowLeft") showImage(currentImageIndex - 1);
-        else if (e.key === "ArrowRight") showImage(currentImageIndex + 1);
+function showImage(index) {
+    if (!currentModalImages || currentModalImages.length === 0) return;
+    currentImageIndex = (index + currentModalImages.length) % currentModalImages.length;
+    modalImg.src = currentModalImages[currentImageIndex];
+    const allDots = dotsContainer.querySelectorAll('.dot');
+    if (allDots.length > 0) {
+        allDots.forEach(dot => dot.classList.remove('active'));
+        allDots[currentImageIndex].classList.add('active');
     }
-    
-    let touchStartX = 0, touchEndX = 0;
-    function handleTouchStart(e) { touchStartX = e.touches[0].clientX; }
-    function handleTouchMove(e) { touchEndX = e.touches[0].clientX; }
-    function handleTouchEnd() {
-        if (currentModalImages.length <= 1) return;
-        if (touchStartX - touchEndX > 50) showImage(currentImageIndex + 1);
-        if (touchStartX - touchEndX < -50) showImage(currentImageIndex - 1);
-    }
-    
+}
+
+document.querySelectorAll('.tile-gallery-item, .gallery-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const galleryContainer = item.closest('.gallery-container');
+        if (galleryContainer) {
+            const allItems = Array.from(galleryContainer.children);
+            const images = allItems.map(galleryItem => galleryItem.dataset.src || galleryItem.querySelector('img').src);
+            const startIndex = allItems.indexOf(item);
+            openImageModal(true, images, startIndex);
+        } else {
+            const src = item.dataset.src || item.querySelector('img').src;
+            openImageModal(false, src);
+        }
+    });
+});
+
+document.querySelectorAll('.product-card .product-image-wrapper').forEach(wrapper => {
+    wrapper.addEventListener('click', (e) => {
+        const card = e.currentTarget.closest('.product-card');
+        const imagesAttr = card.dataset.images;
+        if (!imagesAttr) return;
+        const images = imagesAttr.split(',').map(s => s.trim());
+        if (images.length > 0) openImageModal(true, images, 0);
+    });
+});
+
+function handleKeyDown(e) {
+    if (!imageModal || imageModal.style.display !== 'block') return;
+    if (e.key === "Escape") history.back();
+    if (currentModalImages.length <= 1) return;
+    if (e.key === "ArrowLeft") showImage(currentImageIndex - 1);
+    else if (e.key === "ArrowRight") showImage(currentImageIndex + 1);
+}
+
+let touchStartX = 0, touchEndX = 0;
+function handleTouchStart(e) { touchStartX = e.touches[0].clientX; }
+function handleTouchMove(e) { touchEndX = e.touches[0].clientX; }
+function handleTouchEnd() {
+    if (currentModalImages.length <= 1) return;
+    if (touchStartX - touchEndX > 50) showImage(currentImageIndex + 1);
+    if (touchStartX - touchEndX < -50) showImage(currentImageIndex - 1);
+}
     // --- Логика для виджета быстрого заказа ---
     const quickOrderWidget = document.getElementById('quickOrderWidget');
     if (quickOrderWidget) {
