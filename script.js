@@ -247,44 +247,68 @@ function handleTouchEnd() {
     if (touchStartX - touchEndX > 50) showImage(currentImageIndex + 1);
     if (touchStartX - touchEndX < -50) showImage(currentImageIndex - 1);
 }
-    // --- Логика для виджета быстрого заказа ---
-    const quickOrderWidget = document.getElementById('quickOrderWidget');
-    if (quickOrderWidget) {
-        const orderTrigger = document.getElementById('orderTrigger');
-        const closePopup = document.getElementById('closePopup');
-        const quickOrderForm = document.getElementById('quickOrderForm');
-        const showQuickOrderBtn = document.getElementById('showQuickOrderFormBtn');
-        const openPopup = () => { if (!quickOrderWidget.classList.contains('active')) quickOrderWidget.classList.add('active'); };
-        const closePopupLogic = () => { quickOrderWidget.classList.remove('active'); };
 
-        if (orderTrigger) orderTrigger.addEventListener('click', (e) => { e.stopPropagation(); openPopup(); });
-        if (showQuickOrderBtn) showQuickOrderBtn.addEventListener('click', openPopup);
-        if (closePopup) closePopup.addEventListener('click', closePopupLogic);
-        document.addEventListener('click', (e) => {
-            if (quickOrderWidget.classList.contains('active') && !quickOrderWidget.contains(e.target) && e.target !== showQuickOrderBtn) closePopupLogic();
-        });
-        if (quickOrderForm) {
-            quickOrderForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const phoneInput = document.getElementById('clientPhone');
-                fetch('https://telegram-sender.brelok2023.workers.dev/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: phoneInput.value })
-                }).then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        showCustomAlert('Дякуємо! Ми скоро з вами зв\'яжемось.');
-                        phoneInput.value = '';
-                        closePopupLogic();
-                    } else { throw new Error(data.description || 'Неизвестная ошибка'); }
-                }).catch(error => {
-                    console.error('Ошибка отправки через Worker:', error);
-                    showCustomAlert('Виникла помилка. Спробуйте ще раз.');
-                });
-            });
+   // --- Логика для виджета быстрого заказа ---
+const quickOrderWidget = document.getElementById('quickOrderWidget');
+if (quickOrderWidget) {
+    const orderTrigger = document.getElementById('orderTrigger');
+    const closePopup = document.getElementById('closePopup');
+    const quickOrderForm = document.getElementById('quickOrderForm');
+    const showQuickOrderBtn = document.getElementById('showQuickOrderFormBtn');
+
+    // Робимо функцію закриття глобальною, щоб до неї був доступ
+    window.closeQuickOrderPopup = () => {
+        if (quickOrderWidget.classList.contains('active')) {
+            quickOrderWidget.classList.remove('active');
         }
+    };
+
+    const openPopup = () => {
+        if (!quickOrderWidget.classList.contains('active')) {
+            quickOrderWidget.classList.add('active');
+            // Додаємо крок в історію браузера при відкритті
+            history.pushState({ modal: 'quick-order' }, 'Швидке замовлення');
+        }
+    };
+
+    // Обробники відкриття
+    if (orderTrigger) orderTrigger.addEventListener('click', (e) => { e.stopPropagation(); openPopup(); });
+    if (showQuickOrderBtn) showQuickOrderBtn.addEventListener('click', openPopup);
+
+    // При ручному закритті (клік на хрестик або поза вікном) - повертаємося назад в історії
+    if (closePopup) closePopup.addEventListener('click', () => history.back());
+    document.addEventListener('click', (e) => {
+        if (quickOrderWidget.classList.contains('active') && !quickOrderWidget.contains(e.target) && e.target !== showQuickOrderBtn) {
+            history.back();
+        }
+    });
+
+    // Обробник відправки форми
+    if (quickOrderForm) {
+        quickOrderForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const phoneInput = document.getElementById('clientPhone');
+            fetch('https://telegram-sender.brelok2023.workers.dev/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: phoneInput.value })
+            }).then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    showCustomAlert('Дякуємо! Ми скоро з вами зв\'яжемось.');
+                    phoneInput.value = '';
+                    // Закриваємо вікно, повернувшись назад в історії
+                    if (quickOrderWidget.classList.contains('active')) {
+                        history.back();
+                    }
+                } else { throw new Error(data.description || 'Неизвестная ошибка'); }
+            }).catch(error => {
+                console.error('Ошибка отправки через Worker:', error);
+                showCustomAlert('Виникла помилка. Спробуйте ще раз.');
+            });
+        });
     }
+}
     
     // --- Система уведомлений (CUSTOM ALERT) ---
     const customAlertModal = document.getElementById('customAlertModal');
@@ -688,11 +712,15 @@ if (playerWrapper) {
 
 // --- ЕДИНЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ "НАЗАД" ---
 window.addEventListener('popstate', () => {
-    if (typeof closeImageModalLogic === 'function') {
-        closeImageModalLogic();
+    // Цей єдиний обробник тепер закриває будь-яке активне вікно
+    if (typeof window.closeImageModalLogic === 'function') {
+        window.closeImageModalLogic();
     }
-    if (window.location.hash !== '#cart' && typeof closeCartModal === 'function') {
-        closeCartModal();
+    if (typeof window.closeCartModal === 'function') {
+        window.closeCartModal();
+    }
+    // Викликаємо нову глобальну функцію для вікна швидкого замовлення
+    if (typeof window.closeQuickOrderPopup === 'function') {
+        window.closeQuickOrderPopup();
     }
 });
-
