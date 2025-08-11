@@ -1419,21 +1419,21 @@ body.menu-open {
 .swipe-hint-container img {
     filter: drop-shadow(0 0 8px rgba(0,0,0,0.8)) invert(1);
 }
-/* Нова анімація РУХУ зліва направо */
+/* Нова анімація РУХУ зправа на ліво */
 @keyframes swipe-and-fade {
     0% {
-        transform: translate(-50%, -50%) translateX(-60px);
+        transform: translate(-50%, -50%) translateX(60px); /* Початок справа */
         opacity: 0;
     }
     20% {
         opacity: 1;
     }
     80% {
-        transform: translate(-50%, -50%) translateX(60px);
+        transform: translate(-50%, -50%) translateX(-60px); /* Рух вліво */
         opacity: 1;
     }
     100% {
-        transform: translate(-50%, -50%) translateX(60px);
+        transform: translate(-50%, -50%) translateX(-60px); /* Кінець зліва */
         opacity: 0;
     }
 }
