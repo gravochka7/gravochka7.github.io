@@ -611,6 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clientName: document.getElementById('clientName').value,
                 clientPhone: document.getElementById('clientPhoneCart').value,
                 viberTelegram: document.getElementById('clientViberTelegram').value,
+                deliveryAddress: document.getElementById('deliveryAddress').value, // <-- ДОДАЙТЕ ЦЕЙ РЯДОК
                 cartItems: cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price }))
             };
 
