@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Створюємо HTML для примітки, тільки якщо це акційний товар
         const promoNoteHTML = isPromoDuplicate 
-            ? `<p class="promo-note">(Можна отримати тільки при замовленні будь-якого основного брелока або жетона)</p>` 
+            ? `<p class="promo-note">(При замовленні будь-якого брелоку або жетону,ви отримуєте його дублікат-брелок)</p>` 
             : '';
 
         itemEl.innerHTML = `
