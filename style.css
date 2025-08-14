@@ -1519,3 +1519,120 @@ body.menu-open {
 .cart-item-details .price {
     margin-top: 4px;
 }
+
+/* --- ФІРМОВІ КОЛЬОРИ ДЛЯ ІКОНОК СОЦМЕРЕЖ В ХЕДЕРІ ТА ФУТЕРІ --- */
+
+/* Viber (для хедера та футера) */
+.nav .fa-viber,
+.social-links .fa-viber {
+    color: #7360F2; /* Фіолетовий */
+}
+
+/* Telegram (для хедера та футера) */
+.nav .fa-telegram-plane,
+.social-links .fa-telegram-plane {
+    color: #2AABEE; /* Блакитний */
+}
+
+/* --- ОНОВЛЕНІ СТИЛІ ДЛЯ INSTAGRAM З ГРАДІЄНТОМ --- */
+.nav .fa-instagram,
+.social-links .fa-instagram {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #E4405F; /* Запасний колір для старих браузерів */
+}
+
+/* Facebook (для футера) */
+.social-links .fa-facebook-f {
+    color: #1877F2; /* Синій */
+}
+
+/* Ефект при наведенні: робимо іконки трохи прозорими */
+.nav .nav-social a:hover i,
+.social-links a:hover i {
+    opacity: 0.8;
+    color: inherit; /* Скидаємо зміну кольору при наведенні */
+}
+
+/* Повертаємо градієнт при наведенні для Instagram */
+.nav .nav-social a:hover .fa-instagram,
+.social-links a:hover .fa-instagram {
+    -webkit-text-fill-color: transparent;
+}
+
+/* --- СВІТІННЯ ТІЛЬКИ ДЛЯ VIBER ТА INSTAGRAM В ХЕДЕРІ --- */
+
+.nav .fa-viber,
+.nav .fa-instagram {
+    /* Додаємо білу тінь-світіння */
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.486));
+    -webkit-filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.432));
+}
+
+/* --- СТИЛЬ ДЛЯ КНОПКИ ПІД СЕКЦІЄЮ "ЯК ЗАМОВИТИ" --- */
+
+.section-cta-wrapper {
+    text-align: center;
+    margin-top: 30px; /* Зменшуємо відступ зверху, щоб підняти кнопку */
+}
+
+/* Модифікатор для маленької кнопки */
+.cta-button.cta-button-small {
+    padding: 12px 25px; /* Зменшені внутрішні відступи */
+    font-size: 1em;     /* Зменшений шрифт */
+}
+
+/* Зменшуємо нижній відступ для секції "Як замовити" */
+#how-to-order {
+    padding-bottom: 20px;
+}
+
+/* --- ЗМЕНШЕННЯ КНОПКИ "ОБРАТИ ДОДАТКОВІ ТОВАРИ" НА ПК --- */
+
+@media (min-width: 993px) {
+    #chooseExtrasBtn {
+        padding: 10px 20px; /* Зменшуємо внутрішні відступи */
+        font-size: 0.9em;   /* Зменшуємо шрифт */
+    }
+}
+
+/* --- СТИЛІ ДЛЯ СТАРОЇ ТА НОВОЇ ЦІНИ (АДАПТИВНА ВЕРСІЯ) --- */
+
+/* 1. Контейнер для обох цін */
+.price-container {
+    position: relative;
+    width: 100%;
+    margin-top: auto;
+}
+
+/* 2. Стиль для старої, перекресленої ціни (для ПК) */
+.old-price {
+    position: absolute;
+    top: -10px;
+    right: 10%; /* Змінено з left на right для кращої адаптивності */
+    
+    color: #04961c;
+    font-size: 1.1em;
+    text-decoration: line-through;
+     text-decoration-color: rgb(102, 102, 102);
+     text-decoration-thickness: 1.5px;
+    font-family: var(--font-main);
+    font-weight: bold;
+}
+
+/* 3. Переконуємося, що основна ціна залишається по центру */
+.product-card .price {
+    text-align: center;
+    width: 100%;
+}
+
+/* 4. Адаптація для мобільних пристроїв */
+@media (max-width: 480px) {
+    .old-price {
+        top: -5px;      /* Трохи вище */
+        right: 14px;    /* Ближче до правого краю */
+        font-size: 0.8em; /* Ще трохи менше */
+    }
+}
