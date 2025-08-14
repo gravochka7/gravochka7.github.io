@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://gravochka.com.ua/</loc>
+  <lastmod>2025-08-13T21:48:32+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://gravochka.com.ua/payment-and-delivery.html</loc>
+  <lastmod>2025-08-13T21:48:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://gravochka.com.ua/returns.html</loc>
+  <lastmod>2025-08-13T21:48:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://gravochka.com.ua/terms-of-service.html</loc>
+  <lastmod>2025-08-13T21:48:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://gravochka.com.ua/privacy-policy.html</loc>
+  <lastmod>2025-08-13T21:48:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://gravochka.com.ua/index.html</loc>
+  <lastmod>2025-08-13T21:48:32+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>
