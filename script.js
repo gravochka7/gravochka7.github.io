@@ -319,6 +319,48 @@ document.addEventListener('DOMContentLoaded', () => {
         window.showCustomAlert = (message) => alert(message);
     }
 
+    // --- Логика для модального окна "Условия акции" ---
+// --- Логіка для модального вікна "Умови акції" (адаптована версія) ---
+const promoTermsModal = document.getElementById('promoTermsModal');
+const openPromoTermsLink = document.getElementById('open-promo-terms-link'); // Переконайтеся, що посилання з таким id існує
+const closePromoTermsBtn = document.getElementById('closePromoTermsBtn');
+const promoModalOkBtn = document.getElementById('promoModalOkBtn'); // Нова кнопка
+
+if (promoTermsModal && openPromoTermsLink && closePromoTermsBtn && promoModalOkBtn) {
+    
+    const openModal = (e) => {
+        e.preventDefault(); // Запобігаємо переходу за посиланням #
+        promoTermsModal.style.display = 'block';
+    };
+
+    const closeModal = () => {
+        promoTermsModal.style.display = 'none';
+    };
+
+    // Відкриваємо вікно по кліку на посилання
+    openPromoTermsLink.addEventListener('click', openModal);
+
+    // Закриваємо вікно по кліку на хрестик
+    closePromoTermsBtn.addEventListener('click', closeModal);
+
+    // Закриваємо вікно по кліку на кнопку "Зрозуміло"
+    promoModalOkBtn.addEventListener('click', closeModal);
+
+    // Закриваємо вікно по кліку на темний фон
+    promoTermsModal.addEventListener('click', (event) => {
+        if (event.target === promoTermsModal) {
+            closeModal();
+        }
+    });
+
+    // Закриваємо вікно по натисканню на клавішу Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape" && promoTermsModal.style.display === 'block') {
+            closeModal();
+        }
+    });
+}
+
     // =======================================================
     // --- ЛОГИКА КОРЗИНЫ ---
     // =======================================================
@@ -580,67 +622,83 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCart();
     };
 
-    if (orderForm) {
-        orderForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitButton = orderForm.querySelector('.place-order-btn');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Відправка...';
+    // Оновлений обробник форми замовлення
 
-            const hasSpecialItem = cart.some(item => item.id.startsWith('extra1-') || item.id === 'promo-duplicate-1uah');
-            const hasMainProduct = cart.some(item => item.id.startsWith('product'));
+// Оновлений обробник форми замовлення
+if (orderForm) {
+    orderForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitButton = orderForm.querySelector('.place-order-btn');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Відправка...';
 
-            if (hasSpecialItem && !hasMainProduct) {
-                showCustomAlert('Вибачте, акційні товари можна замовити тільки разом з основним жетоном або брелок.');
-                cart = cart.filter(item => !item.id.startsWith('extra1-') && item.id !== 'promo-duplicate-1uah');
-                showCartView();
+        // Перевірки (залишаються без змін)
+        const hasSpecialItem = cart.some(item => item.id.startsWith('extra1-') || item.id === 'promo-duplicate-1uah');
+        const hasMainProduct = cart.some(item => item.id.startsWith('product'));
+
+        if (hasSpecialItem && !hasMainProduct) {
+            showCustomAlert('Вибачте, акційні товари можна замовити тільки разом з основним жетоном або брелоком.');
+            cart = cart.filter(item => !item.id.startsWith('extra1-') && item.id !== 'promo-duplicate-1uah');
+            showCartView();
+            updateCart();
+            submitButton.disabled = false;
+            submitButton.textContent = 'Замовити';
+            return;
+        }
+        if (cart.length === 0) {
+            showCustomAlert('Ваша корзина порожня!');
+            submitButton.disabled = false;
+            submitButton.textContent = 'Замовити';
+            return;
+        }
+
+        const payload = {
+            clientName: document.getElementById('clientName').value,
+            clientPhone: document.getElementById('clientPhoneCart').value,
+            viberTelegram: document.getElementById('clientViberTelegram').value,
+            deliveryAddress: document.getElementById('deliveryAddress').value,
+            cartItems: cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price }))
+        };
+
+        // ---- ОСНОВНА ЗМІНА ТУТ ----
+        fetch('https://telegram-sender.brelok2023.workers.dev/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json()) // Отримуємо відповідь від Worker
+        .then(data => {
+            if (data.ok && data.orderId) {
+                // Успіх! Ми отримали номер замовлення
+                cart = [];
+                updateCart(); // Очищуємо корзину
+                // Перенаправляємо на сторінку "Дякуємо", передаючи номер замовлення у посиланні
+                window.location.href = `thank-you.html?order_id=${data.orderId}`;
+            } else if (data.ok) {
+                // Якщо це був швидкий запит (без orderId), просто показуємо успіх
+                showCustomAlert('Дякуємо! Ми скоро з вами зв\'яжемось.');
+                if (window.location.hash === '#cart') history.back();
+                else closeCartModal();
+                body.classList.remove('menu-open');
+                cart = [];
                 updateCart();
+                orderForm.reset();
                 submitButton.disabled = false;
                 submitButton.textContent = 'Замовити';
-                return;
+            } else {
+                // Якщо Worker повернув помилку
+                throw new Error(data.error || 'Невідома помилка від сервера');
             }
-            if (cart.length === 0) {
-                showCustomAlert('Ваша корзина порожня!');
-                submitButton.disabled = false;
-                submitButton.textContent = 'Замовити';
-                return;
-            }
-
-            const payload = {
-                clientName: document.getElementById('clientName').value,
-                clientPhone: document.getElementById('clientPhoneCart').value,
-                viberTelegram: document.getElementById('clientViberTelegram').value,
-                deliveryAddress: document.getElementById('deliveryAddress').value, // <-- ДОДАЙТЕ ЦЕЙ РЯДОК
-                cartItems: cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price }))
-            };
-
-            fetch('https://telegram-sender.brelok2023.workers.dev/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).then(response => response.json())
-            .then(data => {
-                if (data.ok) {
-                    if(successModal) successModal.style.display = 'flex';
-                    if (window.location.hash === '#cart') history.back();
-                    else closeCartModal();
-                    body.classList.remove('menu-open');
-                    cart = [];
-                    updateCart();
-                    orderForm.reset();
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Замовити';
-                    setTimeout(() => { if(successModal) successModal.style.display = 'none'; }, 4000);
-                } else { throw new Error(data.description || 'Невідома помилка'); }
-            }).catch(error => {
-                console.error('Помилка відправки замовлення:', error);
-                showCustomAlert('Виникла помилка при оформленні замовлення.');
-                submitButton.disabled = false;
-                submitButton.textContent = 'Замовити';
-            });
+        })
+        .catch(error => {
+            console.error('Помилка відправки замовлення:', error);
+            showCustomAlert('Виникла помилка при оформленні замовлення.');
+            submitButton.disabled = false;
+            submitButton.textContent = 'Замовити';
         });
-    }
+    });
+}
     updateCart();
 
     // --- Анімація похитування для блоку "Додатково" ---
@@ -863,4 +921,8 @@ window.addEventListener('popstate', () => {
     if (typeof window.closeQuickOrderPopup === 'function') {
         window.closeQuickOrderPopup();
     }
+    
+
 });
+
+
