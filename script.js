@@ -689,8 +689,7 @@ if (orderForm) {
                 // 2. СОХРАНЯЕМ ДАННЫЕ В localStorage ДЛЯ СЛЕДУЮЩЕЙ СТРАНИЦЫ
                 localStorage.setItem('lastPurchaseData', JSON.stringify(purchaseData));
 
-                 // --- ДОБАВЬТЕ ЭТУ СТРОКУ ---
-    console.log('Данные о покупке УСПЕШНО СОХРАНЕНЫ в localStorage перед редиректом.'); 
+                
                 // Очищаем корзину (ваш старый код)
                 cart = [];
                 updateCart(); 
