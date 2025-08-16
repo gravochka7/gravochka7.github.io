@@ -175,7 +175,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <button id="showQuickOrderFormBtn" class="cta-button">Замовити швидко</button>
 
-    <a href="https://t.me/gravik_memories" target="_blank" class="social-cta-button telegram-btn" aria-label="Написати у Telegram">
+    <a href="https://t.me/gravochka" target="_blank" class="social-cta-button telegram-btn" aria-label="Написати у Telegram">
         <i class="fab fa-telegram-plane"></i>
     </a>
 </div>
@@ -361,7 +361,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="container">
                 <div class="offer-content">
                     <h2><i class="fas fa-fire"></i> Вигідна ПРОПОЗИЦІЯ: Брелок за 1 гривню!</h2>
-                    <p>Не пропустіть можливість! Тільки до кінця пропозиції при замовленні жетону або брелоку з будь-яким гравіюванням — ви отримуєте можливість придбати ще один такий самий брелок за 1грн. Ідеально на прозапас або як подарунок.</p>
+                    <p>Не пропустіть можливість! Тільки до кінця пропозиції при замовленні жетону або брелоку з будь-яким гравіюванням — ви отримуєте можливість придбати ще один такий самий брелок за 1грн. Ідеально на прозапас або як подарунок.
+                        <a href="#" id="open-promo-terms-link" class="promo-terms-link">Умови данної пропозиції</a>
+                    </p>
+                    
                     <a href="#" id="add-promo-item-btn" class="cta-button offer-button"
    data-id="promo-duplicate-1uah"
    data-name="Брелок Дублікат за 1грн"
@@ -579,6 +582,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p>Дякуємо! Ми зв'яжемося з вами найближчим часом для уточнення деталей.</p>
         </div>
     </div>
+
+    <div id="promoTermsModal" class="custom-alert-modal">
+    <div class="custom-alert-content promo-terms-content">
+        <span id="closePromoTermsBtn" class="custom-alert-close-btn">&times;</span>
+        <h3>Умови акції "Дублікат за 1 грн"</h3>
+        <p>1. Акційна пропозиція діє тільки при покупці будь-якого основного товару (жетона або брелока з гравіюванням).</p>
+        <p>2. Під "дублікатом" мається на увазі брелок з тим самим гравіюванням, що і на основному замовленому жетоні.</p>
+        <p>3. Пропозиція тільки для нових клієнтів gravochka.com.ua</p>
+        <p>4. Акція діє до дати, вказаної на таймері зворотного відліку.</p>
+        <button id="promoModalOkBtn" class="promo-modal-ok-btn">Зрозуміло</button>
+    </div>
+</div>
     <script src="script.js"></script>
 
     <div id="customAlertModal" class="custom-alert-modal">
@@ -588,5 +603,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button class="custom-alert-ok-btn">OK</button>
     </div>
 </div>
+
 </body>
 </html>
