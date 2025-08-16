@@ -93,7 +93,50 @@
         <p>&copy; 2025 Gravochka. Всі права захищені.</p>
     </div>
     </footer>
+<script>
+    // --- СКРИПТ ДЛЯ ОТПРАВКИ ДАННЫХ В GTM ---
 
+    // 1. Показываем номер заказа на странице (если у вас есть место для него)
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('order_id');
+        const orderIdElement = document.getElementById('order-id'); // Убедитесь, что у вас на странице есть элемент с таким id
+        if (orderId && orderIdElement) {
+            orderIdElement.textContent = orderId;
+        }
+    } catch (e) {
+        console.error("Ошибка отображения ID заказа:", e);
+    }
+
+
+      // --- ДОБАВЬТЕ ЭТУ СТРОКУ В САМОМ НАЧАЛЕ СКРИПТА ---
+    console.log('Скрипт на странице "Спасибо" ЗАПУСТИЛСЯ.');
+    
+    // 2. Достаем данные о покупке из localStorage
+    const purchaseDataString = localStorage.getItem('lastPurchaseData');
+
+    if (purchaseDataString) {
+        try {
+            // Превращаем строку обратно в объект
+            const purchaseData = JSON.parse(purchaseDataString);
+
+            // 3. Отправляем данные в dataLayer, чтобы GTM их "услышал"
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'purchase',
+                'ecommerce': purchaseData
+            });
+
+            // 4. ОЧЕНЬ ВАЖНО: Очищаем данные, чтобы покупка не отправилась еще раз при обновлении страницы
+            localStorage.removeItem('lastPurchaseData');
+
+            console.log('Purchase data sent to dataLayer:', purchaseData);
+
+        } catch (e) {
+            console.error("Ошибка обработки данных о покупке:", e);
+        }
+    }
+</script>
     <script src="script.js"></script>
     <script>
   document.addEventListener('DOMContentLoaded', () => {
