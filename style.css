@@ -1636,3 +1636,53 @@ body.menu-open {
         font-size: 0.8em; /* Ще трохи менше */
     }
 }
+
+/* --- СТИЛІ ДЛЯ МОДАЛЬНОГО ВІКНА "УМОВИ АКЦІЇ" --- */
+
+/* Контейнер для контенту */
+.promo-terms-content {
+    text-align: left;
+    max-width: 500px;
+}
+
+/* Заголовок */
+.promo-terms-content h3 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* Кнопка "Зрозуміло" */
+.promo-modal-ok-btn {
+    display: block;
+    margin: 25px auto 0; /* Відступ зверху та центрування */
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    background-color:#2a3969 ;
+    color: rgb(230, 231, 236);
+    font-family: var(--font-accent);
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.promo-modal-ok-btn:hover {
+    background-color: #5b72bb;
+}
+
+/* --- СТИЛІ ДЛЯ ПОСИЛАННЯ "УМОВИ АКЦІЇ" --- */
+
+.promo-terms-link {
+    display: block;      /* Робимо посилання блоковим, але всередині <p> */
+    margin-top: 5px;    /* Невеликий відступ від тексту вище */
+    font-size: 1em;
+    color: #eeffbe;
+      text-decoration: none;
+      text-shadow: none; /* <-- ДОДАЙТЕ ЦЕЙ РЯДОК */
+}
+
+/* Прибираємо зайвий нижній відступ у абзацу, що містить посилання */
+.offer-content p {
+    margin-bottom: 10px; /* Зменшуємо відступ до кнопки */
+}
