@@ -625,6 +625,7 @@ if (promoTermsModal && openPromoTermsLink && closePromoTermsBtn && promoModalOkB
     // Оновлений обробник форми замовлення
 
 // Оновлений обробник форми замовлення
+// --- НОВЫЙ, УЛУЧШЕННЫЙ ОБРАБОТЧИК ФОРМЫ ЗАКАЗА ---
 if (orderForm) {
     orderForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -633,7 +634,7 @@ if (orderForm) {
         submitButton.disabled = true;
         submitButton.textContent = 'Відправка...';
 
-        // Перевірки (залишаються без змін)
+        // Проверки (остаются без изменений)
         const hasSpecialItem = cart.some(item => item.id.startsWith('extra1-') || item.id === 'promo-duplicate-1uah');
         const hasMainProduct = cart.some(item => item.id.startsWith('product'));
 
@@ -661,39 +662,50 @@ if (orderForm) {
             cartItems: cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price }))
         };
 
-        // ---- ОСНОВНА ЗМІНА ТУТ ----
+        // ---- ОСНОВНЫЕ ИЗМЕНЕНИЯ ТУТ ----
         fetch('https://telegram-sender.brelok2023.workers.dev/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         })
-        .then(response => response.json()) // Отримуємо відповідь від Worker
+        .then(response => response.json())
         .then(data => {
             if (data.ok && data.orderId) {
-                // Успіх! Ми отримали номер замовлення
+                // УСПЕХ!
+                
+                // 1. ГОТОВИМ ДАННЫЕ ДЛЯ FACEBOOK PIXEL
+                const purchaseData = {
+                    transaction_id: data.orderId, // Используем ID заказа от сервера
+                    value: cart.reduce((total, item) => total + item.price * item.quantity, 0),
+                    currency: 'UAH',
+                    items: cart.map(item => ({
+                        item_id: item.id,
+                        item_name: item.name,
+                        price: item.price.toFixed(2),
+                        quantity: item.quantity
+                    }))
+                };
+
+                // 2. СОХРАНЯЕМ ДАННЫЕ В localStorage ДЛЯ СЛЕДУЮЩЕЙ СТРАНИЦЫ
+                localStorage.setItem('lastPurchaseData', JSON.stringify(purchaseData));
+
+                 // --- ДОБАВЬТЕ ЭТУ СТРОКУ ---
+    console.log('Данные о покупке УСПЕШНО СОХРАНЕНЫ в localStorage перед редиректом.'); 
+                // Очищаем корзину (ваш старый код)
                 cart = [];
-                updateCart(); // Очищуємо корзину
-                // Перенаправляємо на сторінку "Дякуємо", передаючи номер замовлення у посиланні
+                updateCart(); 
+                
+                // 3. ПЕРЕНАПРАВЛЯЕМ НА СТРАНИЦУ "СПАСИБО"
                 window.location.href = `thank-you.html?order_id=${data.orderId}`;
-            } else if (data.ok) {
-                // Якщо це був швидкий запит (без orderId), просто показуємо успіх
-                showCustomAlert('Дякуємо! Ми скоро з вами зв\'яжемось.');
-                if (window.location.hash === '#cart') history.back();
-                else closeCartModal();
-                body.classList.remove('menu-open');
-                cart = [];
-                updateCart();
-                orderForm.reset();
-                submitButton.disabled = false;
-                submitButton.textContent = 'Замовити';
+                
             } else {
-                // Якщо Worker повернув помилку
-                throw new Error(data.error || 'Невідома помилка від сервера');
+                // Если Worker вернул ошибку
+                throw new Error(data.error || 'Неизвестная ошибка от сервера');
             }
         })
         .catch(error => {
-            console.error('Помилка відправки замовлення:', error);
-            showCustomAlert('Виникла помилка при оформленні замовлення.');
+            console.error('Ошибка отправки заказа:', error);
+            showCustomAlert('Возникла ошибка при оформлении заказа.');
             submitButton.disabled = false;
             submitButton.textContent = 'Замовити';
         });
