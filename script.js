@@ -322,41 +322,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Логика для модального окна "Условия акции" ---
 // --- Логіка для модального вікна "Умови акції" (адаптована версія) ---
 const promoTermsModal = document.getElementById('promoTermsModal');
-const openPromoTermsLink = document.getElementById('open-promo-terms-link'); // Переконайтеся, що посилання з таким id існує
+const openPromoTermsLink = document.getElementById('open-promo-terms-link');
 const closePromoTermsBtn = document.getElementById('closePromoTermsBtn');
-const promoModalOkBtn = document.getElementById('promoModalOkBtn'); // Нова кнопка
+const promoModalOkBtn = document.getElementById('promoModalOkBtn');
 
 if (promoTermsModal && openPromoTermsLink && closePromoTermsBtn && promoModalOkBtn) {
-    
+
+    // Функция открытия теперь добавляет запись в историю
     const openModal = (e) => {
-        e.preventDefault(); // Запобігаємо переходу за посиланням #
+        e.preventDefault();
         promoTermsModal.style.display = 'block';
+        // Добавляем состояние в историю, чтобы кнопка "назад" его перехватила
+        history.pushState({ modal: 'promo-terms' }, 'Умови акції');
     };
 
-    const closeModal = () => {
-        promoTermsModal.style.display = 'none';
+    // Создаем глобальную функцию закрытия, чтобы ее мог вызвать popstate
+    window.closePromoTermsModal = () => {
+        if (promoTermsModal.style.display === 'block') {
+            promoTermsModal.style.display = 'none';
+        }
     };
 
-    // Відкриваємо вікно по кліку на посилання
     openPromoTermsLink.addEventListener('click', openModal);
 
-    // Закриваємо вікно по кліку на хрестик
-    closePromoTermsBtn.addEventListener('click', closeModal);
+    // Все кнопки закрытия теперь просто вызывают history.back()
+    closePromoTermsBtn.addEventListener('click', () => history.back());
+    promoModalOkBtn.addEventListener('click', () => history.back());
 
-    // Закриваємо вікно по кліку на кнопку "Зрозуміло"
-    promoModalOkBtn.addEventListener('click', closeModal);
-
-    // Закриваємо вікно по кліку на темний фон
     promoTermsModal.addEventListener('click', (event) => {
         if (event.target === promoTermsModal) {
-            closeModal();
+            history.back();
         }
     });
-
-    // Закриваємо вікно по натисканню на клавішу Escape
+    
+    // Этот обработчик остается на случай закрытия через ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === "Escape" && promoTermsModal.style.display === 'block') {
-            closeModal();
+            history.back();
         }
     });
 }
@@ -931,6 +933,10 @@ window.addEventListener('popstate', () => {
     }
     if (typeof window.closeQuickOrderPopup === 'function') {
         window.closeQuickOrderPopup();
+    }
+    // 👇 ВОТ ИЗМЕНЕНИЕ 👇
+    if (typeof window.closePromoTermsModal === 'function') {
+        window.closePromoTermsModal();
     }
     
 
