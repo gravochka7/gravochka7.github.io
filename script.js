@@ -244,60 +244,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Логика для виджета быстрого заказа ---
-    const quickOrderWidget = document.getElementById('quickOrderWidget');
-    if (quickOrderWidget) {
-        const orderTrigger = document.getElementById('orderTrigger');
-        const closePopup = document.getElementById('closePopup');
-        const quickOrderForm = document.getElementById('quickOrderForm');
-        const showQuickOrderBtn = document.getElementById('showQuickOrderFormBtn');
+if (quickOrderWidget) {
+    const orderTrigger = document.getElementById('orderTrigger');
+    const closePopup = document.getElementById('closePopup');
+    const quickOrderForm = document.getElementById('quickOrderForm');
+    const showQuickOrderBtn = document.getElementById('showQuickOrderFormBtn');
 
-        window.closeQuickOrderPopup = () => {
-            if (quickOrderWidget.classList.contains('active')) {
-                quickOrderWidget.classList.remove('active');
-            }
-        };
-
-        const openPopup = () => {
-            if (!quickOrderWidget.classList.contains('active')) {
-                quickOrderWidget.classList.add('active');
-                history.pushState({ modal: 'quick-order' }, 'Швидке замовлення');
-            }
-        };
-
-        if (orderTrigger) orderTrigger.addEventListener('click', (e) => { e.stopPropagation(); openPopup(); });
-        if (showQuickOrderBtn) showQuickOrderBtn.addEventListener('click', openPopup);
-
-        if (closePopup) closePopup.addEventListener('click', () => history.back());
-        document.addEventListener('click', (e) => {
-            if (quickOrderWidget.classList.contains('active') && !quickOrderWidget.contains(e.target) && e.target !== showQuickOrderBtn) {
-                history.back();
-            }
-        });
-
-        if (quickOrderForm) {
-            quickOrderForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const phoneInput = document.getElementById('clientPhone');
-                fetch('https://telegram-sender.brelok2023.workers.dev/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: phoneInput.value })
-                }).then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        showCustomAlert('Дякуємо! Ми скоро з вами зв\'яжемось.');
-                        phoneInput.value = '';
-                        if (quickOrderWidget.classList.contains('active')) {
-                            history.back();
-                        }
-                    } else { throw new Error(data.description || 'Неизвестная ошибка'); }
-                }).catch(error => {
-                    console.error('Ошибка отправки через Worker:', error);
-                    showCustomAlert('Виникла помилка. Спробуйте ще раз.');
-                });
-            });
+    window.closeQuickOrderPopup = () => {
+        if (quickOrderWidget.classList.contains('active')) {
+            quickOrderWidget.classList.remove('active');
         }
+    };
+
+    const openPopup = () => {
+        if (!quickOrderWidget.classList.contains('active')) {
+            quickOrderWidget.classList.add('active');
+            history.pushState({ modal: 'quick-order' }, 'Швидке замовлення');
+        }
+    };
+
+    if (orderTrigger) orderTrigger.addEventListener('click', (e) => { e.stopPropagation(); openPopup(); });
+    if (showQuickOrderBtn) showQuickOrderBtn.addEventListener('click', openPopup);
+
+    if (closePopup) closePopup.addEventListener('click', () => history.back());
+    document.addEventListener('click', (e) => {
+        if (quickOrderWidget.classList.contains('active') && !quickOrderWidget.contains(e.target) && e.target !== showQuickOrderBtn) {
+            history.back();
+        }
+    });
+
+    if (quickOrderForm) {
+        quickOrderForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const phoneInput = document.getElementById('clientPhone');
+            fetch('https://telegram-sender.brelok2023.workers.dev/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: phoneInput.value })
+            }).then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    // ===================================
+                    // ВОТ НАША ЕДИНСТВЕННАЯ ВСТАВКА
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({'event': 'lead'});
+                    // ===================================
+
+                    showCustomAlert('Дякуємо! Ми скоро з вами зв\'яжемось.');
+                    phoneInput.value = '';
+                    if (quickOrderWidget.classList.contains('active')) {
+                        history.back();
+                    }
+                } else { throw new Error(data.description || 'Неизвестная ошибка'); }
+            }).catch(error => {
+                console.error('Ошибка отправки через Worker:', error);
+                showCustomAlert('Виникла помилка. Спробуйте ще раз.');
+            });
+        });
     }
+}
     
     // --- Система уведомлений (CUSTOM ALERT) ---
     const customAlertModal = document.getElementById('customAlertModal');
